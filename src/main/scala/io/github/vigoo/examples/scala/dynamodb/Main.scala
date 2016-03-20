@@ -1,30 +1,42 @@
 package io.github.vigoo.examples.scala.dynamodb
 
+import io.github.vigoo.examples.scala.dynamodb.implementations.awssdk.JavaAwsSdkExample
 import io.github.vigoo.examples.scala.dynamodb.implementations.mock.MockExample
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 object Main extends App {
 
-  val impl = new MockExample
-  runExample(impl)
+  val mockImpl = new MockExample
+  runExample(mockImpl)
+
+  val javaSdkImpl = new JavaAwsSdkExample
+  runExample(javaSdkImpl)
 
   private def runExample(impl: Example): Unit = {
-    impl.createTable()
+    println(s"*** Running example ${impl.title}")
 
-    val firstClient = Future {
-      impl.registerItem("A")
-      impl.updateItemStatus("A")
-    }
-    val secondClient = Future {
-      impl.registerItem("B")
-      impl.updateItemStatus("B")
-    }
+    try {
+      impl.createTable()
 
-    firstClient.onComplete { _ =>
-      secondClient.onComplete { _ =>
-        println(s"Result: ${impl.getItemStatus()}")
+      val firstClient = Future {
+        impl.registerItem("A")
+        impl.updateItemStatus("A")
       }
+      val secondClient = Future {
+        impl.registerItem("B")
+        impl.updateItemStatus("B")
+      }
+
+      Await.ready(Future.sequence(List(firstClient, secondClient)), 10.seconds)
+
+      println(s"Result: ${impl.getItemStatus()}")
+    }
+    finally {
+      println("***")
+      println()
     }
   }
 }

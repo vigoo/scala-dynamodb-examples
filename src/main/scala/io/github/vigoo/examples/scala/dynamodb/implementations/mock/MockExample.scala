@@ -4,6 +4,7 @@ import io.github.vigoo.examples.scala.dynamodb.Example
 import scala.concurrent.stm._
 
 class MockExample extends Example {
+  val title = "mock implementation"
 
   private case class Item(name: String, status: String)
   private val item: Ref[Option[Item]] = Ref[Option[Item]](None)
