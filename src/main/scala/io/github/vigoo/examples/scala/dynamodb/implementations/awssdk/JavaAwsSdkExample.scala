@@ -6,17 +6,11 @@ import com.amazonaws.services.dynamodbv2.document.{DynamoDB, Expected, Item, Tab
 import com.amazonaws.services.dynamodbv2.model._
 import com.amazonaws.services.dynamodbv2.{AmazonDynamoDB, AmazonDynamoDBClient}
 import io.github.vigoo.examples.scala.dynamodb.Example
+import io.github.vigoo.examples.scala.dynamodb.implementations.common.DynamoDBNames
 
-class JavaAwsSdkExample extends Example {
-  val title = "java aws sdk implementation"
+class JavaAwsSdkExample extends Example with DynamoDBNames {
+  override val title = "java aws sdk implementation"
 
-  private val serviceNameColumn = "service_name"
-  private val nameColumn = "name"
-  private val statusColumn = "status"
-
-  private val testServiceName = "X"
-
-  private val tableName: String = "example"
   private lazy val client: AmazonDynamoDB = {
     val result = new AmazonDynamoDBClient(new BasicAWSCredentials("test", "test"))
     result.setEndpoint("http://localhost:8000")
@@ -63,13 +57,19 @@ class JavaAwsSdkExample extends Example {
 
   override def updateItemStatus(name: String): Unit = {
     val table = getTable
+
+    val existingItem = table.getItem(serviceNameColumn, testServiceName)
+    val existingValue = existingItem.getInt(valueColumn)
+
     val spec = new PutItemSpec()
       .withItem(new Item()
         .withString(serviceNameColumn, testServiceName)
         .withString(nameColumn, name)
-        .withString(statusColumn, s"$name won"))
+        .withString(statusColumn, s"$name won")
+        .withInt(valueColumn, existingValue + 1))
       .withExpected(
-        new Expected(nameColumn).eq(name))
+        new Expected(nameColumn).eq(name),
+        new Expected(valueColumn).eq(existingValue))
     try {
       table.putItem(spec)
       println(s"$name updated the record")
@@ -80,10 +80,10 @@ class JavaAwsSdkExample extends Example {
     }
   }
 
-  override def getItemStatus(): String = {
+  override def getItemStatus(): (String, Int) = {
     val table = getTable
     val item = table.getItem(serviceNameColumn, testServiceName)
-    item.getString(statusColumn)
+    (item.getString(statusColumn), item.getInt(valueColumn))
   }
 
   override def registerItem(name: String): Unit = {
@@ -92,7 +92,8 @@ class JavaAwsSdkExample extends Example {
         .withItem(new Item()
           .withString(serviceNameColumn, testServiceName)
           .withString(nameColumn, name)
-          .withString(statusColumn, "Initialized"))
+          .withString(statusColumn, "Initialized")
+          .withInt(valueColumn, 1))
         .withExpected(new Expected(statusColumn).notExist())
     try {
       table.putItem(spec)

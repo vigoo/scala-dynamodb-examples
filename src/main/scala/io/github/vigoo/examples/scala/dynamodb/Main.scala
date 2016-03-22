@@ -1,5 +1,8 @@
 package io.github.vigoo.examples.scala.dynamodb
 
+import java.util.concurrent.ExecutionException
+
+import io.github.vigoo.examples.scala.dynamodb.implementations.awscala.AwscalaExample
 import io.github.vigoo.examples.scala.dynamodb.implementations.awssdk.JavaAwsSdkExample
 import io.github.vigoo.examples.scala.dynamodb.implementations.mock.MockExample
 
@@ -14,6 +17,9 @@ object Main extends App {
 
   val javaSdkImpl = new JavaAwsSdkExample
   runExample(javaSdkImpl)
+
+  val awscalaImpl = new AwscalaExample
+  runExample(awscalaImpl)
 
   private def runExample(impl: Example): Unit = {
     println(s"*** Running example ${impl.title}")
@@ -30,9 +36,15 @@ object Main extends App {
         impl.updateItemStatus("B")
       }
 
-      Await.ready(Future.sequence(List(firstClient, secondClient)), 10.seconds)
+      Await.result(Future.sequence(List(firstClient, secondClient)), 10.seconds)
 
       println(s"Result: ${impl.getItemStatus()}")
+    }
+    catch {
+      case boxed: ExecutionException =>
+        println(s"Failed: ${boxed.getCause}")
+      case ex: Exception =>
+        println(s"Failed: $ex")
     }
     finally {
       println("***")

@@ -6,7 +6,7 @@ import scala.concurrent.stm._
 class MockExample extends Example {
   val title = "mock implementation"
 
-  private case class Item(name: String, status: String)
+  private case class Item(name: String, status: String, value: Int)
   private val item: Ref[Option[Item]] = Ref[Option[Item]](None)
 
   override def createTable(): Unit = {
@@ -17,7 +17,7 @@ class MockExample extends Example {
     atomic { implicit txn =>
       item.get match {
         case Some(v) if v.name == name =>
-          item.set(Some(Item(name, s"$name won")))
+          item.set(Some(Item(name, s"$name won", v.value + 1)))
           println(s"$name updated the record")
         case _ =>
           println(s"$name could not update the record")
@@ -25,11 +25,11 @@ class MockExample extends Example {
     }
   }
 
-  override def getItemStatus(): String = {
+  override def getItemStatus(): (String, Int) = {
     atomic { implicit txn =>
       item.get match {
-        case Some(v) => v.status
-        case None => "No item were registered"
+        case Some(v) => (v.status, v.value)
+        case None => ("No item were registered", 0)
       }
     }
   }
@@ -40,7 +40,7 @@ class MockExample extends Example {
         case Some(v) =>
           println(s"Not registered $name, item already existed")
         case None =>
-          item.set(Some(Item(name, "Initialized")))
+          item.set(Some(Item(name, "Initialized", 1)))
           println(s"Registered $name")
       }
     }

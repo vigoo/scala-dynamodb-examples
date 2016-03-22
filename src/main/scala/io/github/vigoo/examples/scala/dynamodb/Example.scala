@@ -5,5 +5,5 @@ trait Example {
   def createTable(): Unit
   def registerItem(name: String): Unit
   def updateItemStatus(name: String): Unit
-  def getItemStatus(): String
+  def getItemStatus(): (String, Int)
 }
