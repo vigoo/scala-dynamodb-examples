@@ -16,6 +16,19 @@ The first implementation does not use *DynamoDB* at all, but defines a skeleton 
 
 
 ## AWS Java API
-The first 
+The first
+ 
+- exceptions
+- verbose
 
 ## [AWScala](https://github.com/seratch/AWScala)
+
+- functionality only partially covered
+- reading data is worse than with the java api
+- ugly mix of styles
+
+## [aws-scala](https://bitbucket.org/atlassian/aws-scala)
+
+- no documentation at all
+- actively developed
+- monadic scalaz based
