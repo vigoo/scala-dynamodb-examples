@@ -24,7 +24,9 @@ class AwsScalaExample extends Example with DynamoDBNames {
     None
   )
 
-  override def createTable(): Unit = ???
+  override def createTable(): Unit = {
+    ???
+  }
 
   override def updateItemStatus(name: String): Unit = ???
 

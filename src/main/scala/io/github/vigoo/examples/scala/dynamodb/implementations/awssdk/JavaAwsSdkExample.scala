@@ -13,8 +13,7 @@ class JavaAwsSdkExample extends Example with DynamoDBNames {
 
   private lazy val client: AmazonDynamoDB = {
     val result = new AmazonDynamoDBClient(new BasicAWSCredentials("test", "test"))
-    result.setEndpoint("http://localhost:8000")
-    result
+    result.withEndpoint("http://localhost:8000")
   }
   private lazy val db: DynamoDB = new DynamoDB(client)
 

@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException
 
 import io.github.vigoo.examples.scala.dynamodb.implementations.awscala.AwscalaExample
 import io.github.vigoo.examples.scala.dynamodb.implementations.awssdk.JavaAwsSdkExample
+import io.github.vigoo.examples.scala.dynamodb.implementations.awswrap.AwsWrapExample
 import io.github.vigoo.examples.scala.dynamodb.implementations.mock.MockExample
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,6 +21,9 @@ object Main extends App {
 
   val awscalaImpl = new AwscalaExample
   runExample(awscalaImpl)
+
+  val awswrapImpl = new AwsWrapExample
+  runExample(awswrapImpl)
 
   private def runExample(impl: Example): Unit = {
     println(s"*** Running example ${impl.title}")
