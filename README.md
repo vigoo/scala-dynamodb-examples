@@ -32,3 +32,9 @@ The first
 - no documentation at all
 - actively developed
 - monadic scalaz based
+
+## [aws-wrap](https://dwhjames.github.io/aws-wrap/index.html)
+
+- Wraps the async Java AWS API
+- Implicit conversion of `AttributeValue` to scala types
+- Mapper for simple use cases
