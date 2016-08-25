@@ -32,5 +32,5 @@ class AwsScalaExample extends Example with DynamoDBNames {
 
   override def getItemStatus(): (String, Int) = ???
 
-  override def registerItem(name: String): Unit = ???
+  override def registerItem(name: String, value: Int): Unit = ???
 }

@@ -69,14 +69,14 @@ class AwscalaExample extends Example with DynamoDBNames {
     }
   }
 
-  override def registerItem(name: String): Unit = {
+  override def registerItem(name: String, value: Int): Unit = {
     try {
       dynamoDB.putConditional(
         tableName,
         serviceNameColumn -> testServiceName,
         nameColumn -> name,
         statusColumn -> "Initialized",
-        valueColumn -> 1
+        valueColumn -> value
       )(Seq(
         statusColumn -> exp.isNull
       ))

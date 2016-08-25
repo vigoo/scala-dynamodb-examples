@@ -12,16 +12,16 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 object Main extends App {
-
-  val mockImpl = new MockExample
-  runExample(mockImpl)
-
-  val javaSdkImpl = new JavaAwsSdkExample
-  runExample(javaSdkImpl)
-
-  val awscalaImpl = new AwscalaExample
-  runExample(awscalaImpl)
-
+//
+//  val mockImpl = new MockExample
+//  runExample(mockImpl)
+//
+//  val javaSdkImpl = new JavaAwsSdkExample
+//  runExample(javaSdkImpl)
+//
+//  val awscalaImpl = new AwscalaExample
+//  runExample(awscalaImpl)
+//
   val awswrapImpl = new AwsWrapExample
   runExample(awswrapImpl)
 
@@ -32,11 +32,11 @@ object Main extends App {
       impl.createTable()
 
       val firstClient = Future {
-        impl.registerItem("A")
+        impl.registerItem("A", 0)
         impl.updateItemStatus("A")
       }
       val secondClient = Future {
-        impl.registerItem("B")
+        impl.registerItem("B", 10)
         impl.updateItemStatus("B")
       }
 

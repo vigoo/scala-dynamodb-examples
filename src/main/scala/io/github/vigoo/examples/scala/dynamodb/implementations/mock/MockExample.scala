@@ -34,13 +34,13 @@ class MockExample extends Example {
     }
   }
 
-  override def registerItem(name: String): Unit = {
+  override def registerItem(name: String, value: Int): Unit = {
     atomic { implicit txn =>
       item.get match {
         case Some(v) =>
           println(s"Not registered $name, item already existed")
         case None =>
-          item.set(Some(Item(name, "Initialized", 1)))
+          item.set(Some(Item(name, "Initialized", value)))
           println(s"Registered $name")
       }
     }

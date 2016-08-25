@@ -85,14 +85,14 @@ class JavaAwsSdkExample extends Example with DynamoDBNames {
     (item.getString(statusColumn), item.getInt(valueColumn))
   }
 
-  override def registerItem(name: String): Unit = {
+  override def registerItem(name: String, value: Int): Unit = {
     val table = getTable
     val spec = new PutItemSpec()
         .withItem(new Item()
           .withString(serviceNameColumn, testServiceName)
           .withString(nameColumn, name)
           .withString(statusColumn, "Initialized")
-          .withInt(valueColumn, 1))
+          .withInt(valueColumn, value))
         .withExpected(new Expected(statusColumn).notExist())
     try {
       table.putItem(spec)
